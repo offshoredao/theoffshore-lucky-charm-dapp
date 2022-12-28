@@ -30,7 +30,7 @@ function getRandomInt() {
 const Home: NextPage = () => {
   const [currentQuestion, setCurrentQuestion] = useState(questions[0]);
   const [canMint, setCanMint] = useState(false);
-  const error = () => toast("Not so easy? Lets try with another one.");
+  const error = () => toast.error("Not so easy? Lets try with another one.");
 
   useEffect(() => {
     setCurrentQuestion(questions[getRandomInt()]);
@@ -45,6 +45,7 @@ const Home: NextPage = () => {
             {currentQuestion.options.map((opt) => (
               <button
                 id={opt.toString()}
+                key={opt.toString()}
                 onClick={() => {
                   if (currentQuestion.answer === opt) {
                     setCanMint(true);
