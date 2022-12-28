@@ -7,6 +7,7 @@ import {
   Web3Button,
   useContract,
   useContractRead,
+  MediaRenderer,
 } from "@thirdweb-dev/react";
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import type { NextPage } from "next";
@@ -66,16 +67,14 @@ const Mint: NextPage = () => {
           {/* Description of your NFT Collection */}
           <p className={styles.description}>
             {
-              "The Genesis Map gives holders lifetime citizenship to the Offshore DAO."
+              "If you are brave enough only abundance will bubble up from this journey."
             }
           </p>
 
           {/* Image Preview of NFTs */}
-          <Image
-            width={300}
-            height={300}
+          <MediaRenderer
             className={styles.image}
-            src={`/offshore-genesis-map.gif`} 
+            src={`/lucky_charm.mp4`}
             alt={`${contractMetadata?.name} preview image`}
           />
 
@@ -132,7 +131,11 @@ const Mint: NextPage = () => {
                     }
                     // If the function fails, we can do something here.
                     // onError={(error) => alert(error?.message)}
-                    onError={(error) => alert("Private Mint: No claim rights found for this address")}
+                    onError={(error) =>
+                      alert(
+                        "Private Mint: No claim rights found for this address"
+                      )
+                    }
                     accentColor="#f213a4"
                     colorMode="dark"
                   >
