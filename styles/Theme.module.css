@@ -67,6 +67,7 @@
 }
 
 .mainButton {
+  margin: 0.18rem;
   cursor: pointer;
   display: inline-flex;
   appearance: none;
