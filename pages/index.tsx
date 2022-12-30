@@ -19,7 +19,7 @@ const questions = [
   },
   {
     question: "2/6 How much will the next batch of 12 Genesis maps Cost?",
-    options: ["0.12 ETH", "1.2 BTC", "1.2 FTT", "12 MATIC", "1000 USDC"],
+    options: ["0.12 ETH", "1.2 BTC", "1.2 FTT", "1000 USDC"],
     answer: "0.12 ETH",
     pos: 2,
   },
@@ -31,14 +31,14 @@ const questions = [
   },
   {
     question: "4/6 What was the first Offshore POAP?",
-    options: ["Truck", "Tom Hanks", "Sparling", "Wilson"],
-    answer: "Wilson",
+    options: ["Mint Party", "Wilson Birthday", "Pioneer", "Pizza Day"],
+    answer: "Pioneer",
     pos: 4,
   },
   {
-    question: "4/6 What was the first Offshore POAP?",
-    options: ["Mint Party", "Wilson Birthday", "Pioneer", "Pizza Day"],
-    answer: "Pioneer",
+    question: "4/6 4 What's the name of our beloved Offshore bot?",
+    options: ["Truck", "Tom Hanks", "Sparling", "Wilson"],
+    answer: "Wilson",
     pos: 5,
   },
   {
