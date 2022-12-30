@@ -153,7 +153,7 @@ const Mint: NextPage = () => {
 
                 {userBalance?.toNumber() === 1 && (
                   <div>
-                    <h4>Congratulations, you now hold the map 🏝️.</h4>
+                    <h4>Congratulations, you now hold the Lucky Charm Shell 🏝️.</h4>
                   </div>
                 )}
               </>
