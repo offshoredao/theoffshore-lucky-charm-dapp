@@ -42,7 +42,7 @@ const questions = [
     pos: 5,
   },
   {
-    question: "6/6 What's a secondary branch from Offshore DAO?",
+    question: "6/6 What's the alternative focus of Offshore?",
     options: [
       "Gaming",
       "ETH Mining",
