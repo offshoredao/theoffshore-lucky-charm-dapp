@@ -1,166 +1,104 @@
-import {
-  useClaimedNFTSupply,
-  useContractMetadata,
-  useUnclaimedNFTSupply,
-  useActiveClaimCondition,
-  useAddress,
-  Web3Button,
-  useContract,
-  useContractRead,
-} from "@thirdweb-dev/react";
-import { formatUnits, parseUnits } from "ethers/lib/utils";
 import type { NextPage } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "../styles/Theme.module.css";
-import Image from "next/image";
+import Mint from "./mint";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-// Put Your NFT Drop Contract address from the dashboard here
-const myNftDropContractAddress = "0x1aA146c9f24F7d2a6349f935EC3DA3268c8eB199";
+const intro = {
+  title: "Let's prove you are worth a Mystic reward.",
+  ready: "Are you ready?",
+};
+
+const questions = [
+  {
+    question: "How many underscores had the original Offshore name?",
+    options: [1, 2, 3, 4],
+    answer: 3,
+  },
+  {
+    question: "How much will the next batch of 12 Genesis maps Cost?",
+    options: ["1.2 ETH", "1.2 BTC", "1.2 FTT", "12 MATIC", "1000 USDC"],
+    answer: "1.2 ETH",
+  },
+  {
+    question: "What are Offshore Coordinates in Decentraland?",
+    options: ["213;-231", "117;-121", "127;-131", "13;-44"],
+    answer: "127;-131",
+  },
+];
+
+function getRandomInt() {
+  return Math.floor(Math.random() * questions.length);
+}
 
 const Home: NextPage = () => {
-  const { contract: nftDrop } = useContract(myNftDropContractAddress);
-  const address = useAddress();
-  const { data: userBalance } = useContractRead(nftDrop, "balanceOf", address);
+  const [currentQuestion, setCurrentQuestion] = useState(questions[0]);
+  const [canMint, setCanMint] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
-  // The amount the user claims
-  const [quantity] = useState(1);
+  const error = () => toast.error("Not so easy? Lets try with another one.");
 
-  // Load contract metadata
-  const { data: contractMetadata } = useContractMetadata(nftDrop);
+  useEffect(() => {
+    setCurrentQuestion(questions[getRandomInt()]);
+  }, []);
 
-  // Load claimed supply and unclaimed supply
-  const { data: unclaimedSupply } = useUnclaimedNFTSupply(nftDrop);
-  const { data: claimedSupply } = useClaimedNFTSupply(nftDrop);
-
-  // Load the active claim condition
-  const { data: activeClaimCondition } = useActiveClaimCondition(nftDrop);
-
-  // Check if there's NFTs left on the active claim phase
-  const isNotReady =
-    activeClaimCondition &&
-    parseInt(activeClaimCondition?.availableSupply) === 0;
-
-  // Check if there's any NFTs left
-  const isSoldOut = unclaimedSupply?.toNumber() === 0;
-
-  // Check price
-  const price = parseUnits(
-    activeClaimCondition?.currencyMetadata.displayValue || "0",
-    activeClaimCondition?.currencyMetadata.decimals
-  );
-
-  // Multiply depending on quantity
-  const priceToMint = price.mul(quantity);
-
-  // Loading state while we fetch the metadata
-  if (!nftDrop || !contractMetadata) {
-    return <div className={styles.container}>Loading...</div>;
+  if (!isReady) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.mintInfoContainer}>
+          <div className={styles.imageSide}>
+            <h2>{intro.title}</h2>
+            <h2>{intro.ready}</h2>
+            <button
+              onClick={() => {
+                <ToastContainer theme="dark" />;
+                setIsReady(true);
+              }}
+              className={styles.mainButton}
+            >
+              Yes
+            </button>
+            <a href="https://www.wikihow.com/Be-Brave" className={styles.mainButton}>
+              No
+            </a>
+          </div>
+        </div>
+        <ToastContainer theme="dark" />
+      </div>
+    );
   }
 
-  return (
-    <div className={styles.container}>
-      <div className={styles.mintInfoContainer}>
-        <div className={styles.imageSide}>
-          {/* Title of your NFT Collection */}
-          <h1>{"Genesis Map"}</h1>
-          {/* Description of your NFT Collection */}
-          <p className={styles.description}>
-            {
-              "The Genesis Map gives holders lifetime citizenship to the Offshore DAO."
-            }
-          </p>
-
-          {/* Image Preview of NFTs */}
-          <Image
-            width={300}
-            height={300}
-            className={styles.image}
-            src={`/offshore-genesis-map.gif`} 
-            alt={`${contractMetadata?.name} preview image`}
-          />
-
-          {/* Amount claimed so far */}
-          <div className={styles.mintCompletionArea}>
-            <div className={styles.mintAreaLeft}>
-              <p>Total Minted</p>
-            </div>
-            <div className={styles.mintAreaRight}>
-              {claimedSupply && unclaimedSupply ? (
-                <p>
-                  {/* Claimed supply so far */}
-                  <b>{claimedSupply?.toNumber()}</b>
-                  {" / "}
-                  {
-                    // Add unclaimed and claimed supply to get the total supply
-                    claimedSupply?.toNumber() + unclaimedSupply?.toNumber()
+  if (!canMint)
+    return (
+      <div className={styles.container}>
+        <div className={styles.mintInfoContainer}>
+          <div className={styles.imageSide}>
+            <h2>{currentQuestion.question}</h2>
+            {currentQuestion.options.map((opt) => (
+              <button
+                id={opt.toString()}
+                key={opt.toString()}
+                onClick={() => {
+                  if (currentQuestion.answer === opt) {
+                    setCanMint(true);
+                  } else {
+                    error();
+                    setCurrentQuestion(questions[getRandomInt()]);
                   }
-                </p>
-              ) : (
-                // Show loading state if we're still loading the supply
-                <p>Loading...</p>
-              )}
-            </div>
+                }}
+                className={styles.mainButton}
+              >
+                {opt}
+              </button>
+            ))}
           </div>
-
-          {/* Show claim button or connect wallet button */}
-          {
-            // Sold out or show the claim button
-            isSoldOut ? (
-              <div>
-                <h2>Sold Out</h2>
-              </div>
-            ) : isNotReady ? (
-              <div>
-                <h2>Not ready to be minted yet</h2>
-              </div>
-            ) : (
-              <>
-                <div className={styles.mintContainer}>
-                  <Web3Button
-                    contractAddress={myNftDropContractAddress}
-                    isDisabled={userBalance?.toNumber() === 1}
-                    action={async (contract) =>
-                      await contract.erc721.claim(quantity)
-                    }
-                    // If the function is successful, we can do something here.
-                    onSuccess={(result) =>
-                      alert(
-                        `Successfully claimed ${result.length} Genesis Map NFT${
-                          result.length > 1 ? "s" : ""
-                        }!`
-                      )
-                    }
-                    // If the function fails, we can do something here.
-                    // onError={(error) => alert(error?.message)}
-                    onError={(error) => alert("Private Mint: No claim rights found for this address")}
-                    accentColor="#f213a4"
-                    colorMode="dark"
-                  >
-                    {`Claim ${quantity > 1 ? ` ${quantity}` : ""}${
-                      activeClaimCondition?.price.eq(0)
-                        ? ""
-                        : activeClaimCondition?.currencyMetadata.displayValue
-                        ? ` (${formatUnits(
-                            priceToMint,
-                            activeClaimCondition.currencyMetadata.decimals
-                          )} ${activeClaimCondition?.currencyMetadata.symbol})`
-                        : ""
-                    }`}
-                  </Web3Button>
-                </div>
-
-                {userBalance?.toNumber() === 1 && (
-                  <div>
-                    <h4>Congratulations, you now hold the map 🏝️.</h4>
-                  </div>
-                )}
-              </>
-            )
-          }
         </div>
+        <ToastContainer theme="dark" />
       </div>
-    </div>
-  );
+    );
+  if (canMint && isReady) return <Mint></Mint>;
+  else return <></>;
 };
 
 export default Home;
