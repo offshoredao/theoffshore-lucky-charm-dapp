@@ -12,36 +12,54 @@ const intro = {
 
 const questions = [
   {
-    question: "How many underscores had the original Offshore name?",
+    question: "1/6 How many underscores had the original Offshore name?",
     options: [1, 2, 3, 4],
     answer: 3,
+    pos: 1,
   },
   {
-    question: "How much will the next batch of 12 Genesis maps Cost?",
-    options: ["1.2 ETH", "1.2 BTC", "1.2 FTT", "12 MATIC", "1000 USDC"],
-    answer: "1.2 ETH",
+    question: "2/6 How much will the next batch of 12 Genesis maps Cost?",
+    options: ["0.12 ETH", "1.2 BTC", "1.2 FTT", "12 MATIC", "1000 USDC"],
+    answer: "0.12 ETH",
+    pos: 2,
   },
   {
-    question: "What are Offshore Coordinates in Decentraland?",
+    question: "3/6 What are Offshore Coordinates in Decentraland?",
     options: ["213;-231", "117;-121", "127;-131", "13;-44"],
     answer: "127;-131",
+    pos: 3,
+  },
+  {
+    question: "4/6 What was the first Offshore POAP?",
+    options: ["Truck", "Tom Hanks", "Sparling", "Wilson"],
+    answer: "Wilson",
+    pos: 4,
+  },
+  {
+    question: "4/6 What was the first Offshore POAP?",
+    options: ["Mint Party", "Wilson Birthday", "Pioneer", "Pizza Day"],
+    answer: "Pioneer",
+    pos: 5,
+  },
+  {
+    question: "6/6 What's a secondary branch from Offshore DAO?",
+    options: [
+      "Gaming",
+      "ETH Mining",
+      "Weed Dispensary",
+      "Metaverse real estate agency",
+    ],
+    answer: "Gaming",
+    pos: 6,
   },
 ];
-
-function getRandomInt() {
-  return Math.floor(Math.random() * questions.length);
-}
 
 const Home: NextPage = () => {
   const [currentQuestion, setCurrentQuestion] = useState(questions[0]);
   const [canMint, setCanMint] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
-  const error = () => toast.error("Not so easy? Lets try with another one.");
-
-  useEffect(() => {
-    setCurrentQuestion(questions[getRandomInt()]);
-  }, []);
+  const error = () => toast.error("Focus and try again.");
 
   if (!isReady) {
     return (
@@ -57,10 +75,13 @@ const Home: NextPage = () => {
               }}
               className={styles.mainButton}
             >
-              Yes
+              {"Yes"}
             </button>
-            <a href="https://www.wikihow.com/Be-Brave" className={styles.mainButton}>
-              No
+            <a
+              href="https://www.wikihow.com/Be-Brave"
+              className={styles.mainButton}
+            >
+              {"No"}
             </a>
           </div>
         </div>
@@ -81,10 +102,11 @@ const Home: NextPage = () => {
                 key={opt.toString()}
                 onClick={() => {
                   if (currentQuestion.answer === opt) {
-                    setCanMint(true);
+                    if (currentQuestion.pos === questions.length)
+                      setCanMint(true);
+                    else setCurrentQuestion(questions[currentQuestion.pos]);
                   } else {
                     error();
-                    setCurrentQuestion(questions[getRandomInt()]);
                   }
                 }}
                 className={styles.mainButton}
