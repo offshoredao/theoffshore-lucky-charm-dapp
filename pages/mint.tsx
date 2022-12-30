@@ -12,11 +12,11 @@ import {
 import { formatUnits, parseUnits } from "ethers/lib/utils";
 import type { NextPage } from "next";
 import { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 import styles from "../styles/Theme.module.css";
-import Image from "next/image";
 
 // Put Your NFT Drop Contract address from the dashboard here
-const myNftDropContractAddress = "0x1aA146c9f24F7d2a6349f935EC3DA3268c8eB199";
+const myNftDropContractAddress = "0x7fEcD753D46c1CA41F3f0C62b5D9bC335Aa2dFc6";
 
 const Mint: NextPage = () => {
   const { contract: nftDrop } = useContract(myNftDropContractAddress);
@@ -63,12 +63,10 @@ const Mint: NextPage = () => {
       <div className={styles.mintInfoContainer}>
         <div className={styles.imageSide}>
           {/* Title of your NFT Collection */}
-          <h1>{"Lucky Charm"}</h1>
           {/* Description of your NFT Collection */}
+          <h2>{"Congratulations - You made it!"}</h2>
           <p className={styles.description}>
-            {
-              "If you are brave enough only abundance will bubble up from this journey."
-            }
+            {"You can now claim a "}<b>{"Lucky Charm"}</b>{" NFT."}
           </p>
 
           {/* Image Preview of NFTs */}
@@ -123,19 +121,20 @@ const Mint: NextPage = () => {
                     }
                     // If the function is successful, we can do something here.
                     onSuccess={(result) =>
-                      alert(
-                        `Successfully claimed ${result.length} Genesis Map NFT${
+                      toast(
+                        `Successfully claimed ${result.length} Lucky Charm NFT${
                           result.length > 1 ? "s" : ""
                         }!`
                       )
                     }
                     // If the function fails, we can do something here.
-                    // onError={(error) => alert(error?.message)}
-                    onError={(error) =>
-                      alert(
+                    // onError={(error) => toast.error(error?.message)}
+                    onError={(error) => {
+                      console.log(error);
+                      toast.error(
                         "Private Mint: No claim rights found for this address"
-                      )
-                    }
+                      );
+                    }}
                     accentColor="#f213a4"
                     colorMode="dark"
                   >
@@ -162,6 +161,7 @@ const Mint: NextPage = () => {
           }
         </div>
       </div>
+      <ToastContainer theme="dark" />
     </div>
   );
 };
