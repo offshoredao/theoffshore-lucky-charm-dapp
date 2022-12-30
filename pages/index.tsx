@@ -36,7 +36,7 @@ const questions = [
     pos: 4,
   },
   {
-    question: "4/6 4 What's the name of our beloved Offshore bot?",
+    question: "4/6 What's the name of our beloved Offshore bot?",
     options: ["Truck", "Tom Hanks", "Sparling", "Wilson"],
     answer: "Wilson",
     pos: 5,
